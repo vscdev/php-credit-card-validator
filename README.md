@@ -27,7 +27,25 @@ Require the package in `composer.json`
 ### Validate a card number knowing the type:
 
 ```php
-$card = CreditCard::validCreditCard('5500005555555559', 'mastercard');
+$card = CreditCard::validCreditCard('5500005555555559', CreditCard::TYPE_MASTERCARD);
+print_r($card);
+```
+
+Output:
+
+```
+Array
+(
+    [valid] => 1
+    [number] => 5500005555555559
+    [type] => mastercard
+)
+```
+
+### Validate a card number against several types:
+
+```php
+$card = CreditCard::validCreditCard('5500005555555559', [CreditCard::TYPE_VISA, CreditCard::TYPE_MASTERCARD]);
 print_r($card);
 ```
 
@@ -63,7 +81,7 @@ Array
 ### Validate the CVC
 
 ```php
-$validCvc = CreditCard::validCvc('234', 'visa');
+$validCvc = CreditCard::validCvc('234', CreditCard::TYPE_VISA);
 var_dump($validCvc);
 ```
 

@@ -14,83 +14,95 @@ namespace Freelancehunt\Validators;
  */
 class CreditCard
 {
+    const TYPE_AMEX               = 'amex';
+    const TYPE_DANKORT            = 'dankort';
+    const TYPE_DINERS_CLUB        = 'diners_club';
+    const TYPE_DISCOVER           = 'discover';
+    const TYPE_FORBRUGSFORENINGEN = 'forbrugsforeningen';
+    const TYPE_JCB                = 'jcb';
+    const TYPE_MAESTRO            = 'maestro';
+    const TYPE_MASTERCARD         = 'mastercard';
+    const TYPE_UNIONPAY           = 'unionpay';
+    const TYPE_VISA               = 'visa';
+    const TYPE_VISA_ELECTRON      = 'visa_electron';
+
     protected static $cards = [
         // Debit cards must come first, since they have more specific patterns than their credit-card equivalents.
 
-        'visaelectron'       => [
-            'type'      => 'visaelectron',
+        self::TYPE_VISA_ELECTRON      => [
+            'type'      => self::TYPE_VISA_ELECTRON,
             'pattern'   => '/^4(026|17500|405|508|844|91[37])/',
             'length'    => [16],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'maestro'            => [
-            'type'      => 'maestro',
+        self::TYPE_MAESTRO            => [
+            'type'      => self::TYPE_MAESTRO,
             'pattern'   => '/^(5(018|0[23]|[68])|6(39|7))/',
             'length'    => [12, 13, 14, 15, 16, 17, 18, 19],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'forbrugsforeningen' => [
-            'type'      => 'forbrugsforeningen',
+        self::TYPE_FORBRUGSFORENINGEN => [
+            'type'      => self::TYPE_FORBRUGSFORENINGEN,
             'pattern'   => '/^600/',
             'length'    => [16],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'dankort'            => [
-            'type'      => 'dankort',
+        self::TYPE_DANKORT            => [
+            'type'      => self::TYPE_DANKORT,
             'pattern'   => '/^5019/',
             'length'    => [16],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
         // Credit cards
-        'visa'               => [
-            'type'      => 'visa',
+        self::TYPE_VISA               => [
+            'type'      => self::TYPE_VISA,
             'pattern'   => '/^4/',
             'length'    => [13, 16, 19],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'mastercard'         => [
-            'type'      => 'mastercard',
+        self::TYPE_MASTERCARD         => [
+            'type'      => self::TYPE_MASTERCARD,
             'pattern'   => '/^(5[0-5]|(222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720))/', // 2221-2720, 51-55
             'length'    => [16],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'amex'               => [
-            'type'      => 'amex',
+        self::TYPE_AMEX               => [
+            'type'      => self::TYPE_AMEX,
             'pattern'   => '/^3[47]/',
             'format'    => '/(\d{1,4})(\d{1,6})?(\d{1,5})?/',
             'length'    => [15],
             'cvcLength' => [3, 4],
             'luhn'      => true,
         ],
-        'dinersclub'         => [
-            'type'      => 'dinersclub',
+        self::TYPE_DINERS_CLUB        => [
+            'type'      => self::TYPE_DINERS_CLUB,
             'pattern'   => '/^3[0689]/',
             'length'    => [14],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'discover'           => [
-            'type'      => 'discover',
+        self::TYPE_DISCOVER           => [
+            'type'      => self::TYPE_DISCOVER,
             'pattern'   => '/^6([045]|22)/',
             'length'    => [16],
             'cvcLength' => [3],
             'luhn'      => true,
         ],
-        'unionpay'           => [
-            'type'      => 'unionpay',
+        self::TYPE_UNIONPAY           => [
+            'type'      => self::TYPE_UNIONPAY,
             'pattern'   => '/^(62|88)/',
             'length'    => [16, 17, 18, 19],
             'cvcLength' => [3],
             'luhn'      => false,
         ],
-        'jcb'                => [
-            'type'      => 'jcb',
+        self::TYPE_JCB                => [
+            'type'      => self::TYPE_JCB,
             'pattern'   => '/^35/',
             'length'    => [16],
             'cvcLength' => [3],
@@ -98,7 +110,7 @@ class CreditCard
         ],
     ];
 
-    public static function validCreditCard($number, $type = null)
+    public static function validCreditCard($number, $types = [])
     {
         $ret = [
             'valid'  => false,
@@ -106,19 +118,25 @@ class CreditCard
             'type'   => '',
         ];
 
+        if (!is_array($types)) {
+            $types = [$types];
+        }
+
         // Strip non-numeric characters
         $number = preg_replace('/[^0-9]/', '', $number);
 
-        if (empty($type)) {
-            $type = self::creditCardType($number);
+        if (empty($types)) {
+            $types[] = self::creditCardType($number);
         }
 
-        if (array_key_exists($type, self::$cards) && self::validCard($number, $type)) {
-            return [
-                'valid'  => true,
-                'number' => $number,
-                'type'   => $type,
-            ];
+        foreach ($types as $type) {
+            if (isset(self::$cards[$type]) && self::validCard($number, $type)) {
+                return [
+                    'valid'  => true,
+                    'number' => $number,
+                    'type'   => $type,
+                ];
+            }
         }
 
         return $ret;

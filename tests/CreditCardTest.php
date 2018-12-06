@@ -4,31 +4,31 @@ use Freelancehunt\Validators\CreditCard;
 
 class CreditCardTest extends \PHPUnit\Framework\TestCase
 {
-    // card numbers of visa, mastercard, amex, dinersclub, discover and jcb taken from:
+    // card numbers of Visa, Mastercard, AmEx, Diners Club, Discover and JCB taken from:
     // https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
 
-    // Card numbers of visaelectron, maestro and dankort taken from:
+    // Card numbers of Visa Electron, Maestro and Dankort taken from:
     // http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html
 
     protected $validCards = [
 
         // Debit cards
-        'visaelectron' => [
+        CreditCard::TYPE_VISA_ELECTRON => [
             '4917300800000000',
         ],
-        'maestro' => [
+        CreditCard::TYPE_MAESTRO => [
             '6759649826438453',
             '6799990100000000019',
         ],
-        'forbrugsforeningen' => [
+        CreditCard::TYPE_FORBRUGSFORENINGEN => [
             '6007220000000004',
         ],
-        'dankort' => [
+        CreditCard::TYPE_DANKORT => [
             '5019717010103742',
         ],
 
         // Credit cards
-        'visa' => [
+        CreditCard::TYPE_VISA => [
             '4111111111111111',
             '4012888888881881',
             '4222222222222',
@@ -40,35 +40,35 @@ class CreditCardTest extends \PHPUnit\Framework\TestCase
             '4444333322221111455',
             '4539935586467516275',
         ],
-        'mastercard' => [
+        CreditCard::TYPE_MASTERCARD => [
             '5555555555554444',
             '5454545454545454',
             '2221000002222221',
             '2223000010089800',
             '2223000048400011',
         ],
-        'amex' => [
+        CreditCard::TYPE_AMEX => [
             '378282246310005',
             '371449635398431',
             '378734493671000', // American Express Corporate
         ],
-        'dinersclub' => [
+        CreditCard::TYPE_DINERS_CLUB => [
             '30569309025904',
             '38520000023237',
             '36700102000000',
             '36148900647913',
         ],
-        'discover' => [
+        CreditCard::TYPE_DISCOVER => [
             '6011111111111117',
             '6011000990139424',
         ],
-        'unionpay' => [
+        CreditCard::TYPE_UNIONPAY => [
             '6271136264806203568',
             '6236265930072952775',
             '6204679475679144515',
             '6216657720782466507',
         ],
-        'jcb' => [
+        CreditCard::TYPE_JCB => [
             '3530111333300000',
             '3566002020360505',
         ],
@@ -114,6 +114,18 @@ class CreditCardTest extends \PHPUnit\Framework\TestCase
 
         // Less than 10 digits
         $result = CreditCard::validCreditCard('424242424');
+        $this->assertEquals(false, $result['valid']);
+
+        // Valid predefined card type
+        $result = CreditCard::validCreditCard('4242424242424242', CreditCard::TYPE_VISA);
+        $this->assertEquals(true, $result['valid']);
+
+        // Valid among predefined card types
+        $result = CreditCard::validCreditCard('4242424242424242', [CreditCard::TYPE_MASTERCARD, CreditCard::TYPE_VISA]);
+        $this->assertEquals(true, $result['valid']);
+
+        // Invalid any of predefined card types
+        $result = CreditCard::validCreditCard('4242424242424242', [CreditCard::TYPE_MASTERCARD, CreditCard::TYPE_VISA_ELECTRON]);
         $this->assertEquals(false, $result['valid']);
     }
 
@@ -162,18 +174,18 @@ class CreditCardTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, CreditCard::validCvc('123', ''));
 
         // Empty number
-        $this->assertEquals(false, CreditCard::validCvc('', 'visa'));
+        $this->assertEquals(false, CreditCard::validCvc('', CreditCard::TYPE_VISA));
 
         // Valid
-        $this->assertEquals(true, CreditCard::validCvc('123', 'visa'));
+        $this->assertEquals(true, CreditCard::validCvc('123', CreditCard::TYPE_VISA));
 
         // Non digits
-        $this->assertEquals(false, CreditCard::validCvc('12e', 'visa'));
+        $this->assertEquals(false, CreditCard::validCvc('12e', CreditCard::TYPE_VISA));
 
         // Less than 3 digits
-        $this->assertEquals(false, CreditCard::validCvc('12', 'visa'));
+        $this->assertEquals(false, CreditCard::validCvc('12', CreditCard::TYPE_VISA));
 
         // More than 3 digits
-        $this->assertEquals(false, CreditCard::validCvc('1234', 'visa'));
+        $this->assertEquals(false, CreditCard::validCvc('1234', CreditCard::TYPE_VISA));
     }
 }
