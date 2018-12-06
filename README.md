@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/freelancehunt/php-credit-card-validator.svg?branch=master)](https://travis-ci.org/freelancehunt/php-credit-card-validator) 
 [![codecov](https://codecov.io/gh/freelancehunt/php-credit-card-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/freelancehunt/php-credit-card-validator) 
+![PHP from Packagist](https://img.shields.io/packagist/php-v/freelancehunt/php-credit-card-validator.svg)
+![Packagist](https://img.shields.io/packagist/v/freelancehunt/php-credit-card-validator.svg)
 [![License](https://img.shields.io/github/license/freelancehunt/php-credit-card-validator.svg)](https://coveralls.io/github/freelancehunt/php-credit-card-validator?branch=master) 
 
 Validates popular debit and credit cards numbers against regular expressions and Luhn algorithm.
