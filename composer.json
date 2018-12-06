@@ -6,10 +6,6 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Ignacio de Tomás",
-            "email": "nacho@inacho.es"
-        },
-        {
             "name": "Oleg Topchiy",
             "email": "edge@freelancehunt.com"
         },
@@ -20,6 +16,10 @@
         {
             "name": "Yaroslav Molchan",
             "email": "yaroslav@freelancehunt.com"
+        },
+        {
+            "name": "Ignacio de Tomás",
+            "email": "nacho@inacho.es"
         }
     ],
     "require": {
