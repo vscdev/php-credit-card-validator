@@ -1,6 +1,6 @@
 <?php
 
-use Freelancehunt\CreditCardValidator\CreditCard;
+use Freelancehunt\Validators\CreditCard;
 
 class CreditCardTest extends \PHPUnit\Framework\TestCase
 {

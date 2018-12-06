@@ -1,6 +1,6 @@
 <?php
 
-namespace Freelancehunt\CreditCardValidator;
+namespace Freelancehunt\Validators;
 
 /**
  * Class CreditCard.
